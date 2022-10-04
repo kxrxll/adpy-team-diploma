@@ -1,18 +1,10 @@
 import requests
 import time
+import configparser
 from sqlalchemy import create_engine
-from config import password_4, my_id
 import re
 import pandas as pd
-from config import DSN
-'''
-Модуль запрашивает у АПИ ВК списки пользователей в сообществах знакомств и добавляет их по заданным критериям
-в БД POstgresql на локальном хосте. Для использования нужны свой id-ВК, ВК=токенб,  DSN типа 
-DSN = 'postgresql+psycopg2://< аккаунт >: < пароль >@localhost:5432/< название БД >'
-Для увеличения кол-ва запрашиваемых сообществ  увеличить параметр < count > в вызове < vk.get_users_id(q='знакомств',
-count=5) > для увеличения лимита запрашиваемых пользователей сообщества в функции < users_info >
- увеличить параметр < quantity >
-'''
+
 
 class VK:
     url = 'https://api.vk.com/method/'
@@ -74,9 +66,11 @@ class VK:
 
         return self.user_data
 
+
 class DB:
     def __init__(self, dsn):
         self.dsn = dsn
+
     def create_conn(self, data):
         conn = create_engine(self.dsn)
 
@@ -90,14 +84,12 @@ class DB:
 
 
 if __name__ == '__main__':
-    access_token = password_4
-    user_id = my_id
+    config = configparser.ConfigParser()
+    config.read("settings.ini")
+    access_token = config["VK"]["password"]
+    user_id = config["VK"]["id"]
     vk = VK(access_token, user_id)
     vk.get_users_id(q='знакомств', count=5)
     vk.users_info()
-    db = DB(DSN)
+    db = DB(config["DSN"]["DSN"])
     db.create_conn(vk.user_data)
-
-
-
-
