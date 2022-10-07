@@ -7,7 +7,10 @@ from collections import OrderedDict
 from pprint import pprint
 import VK
 import time
-
+"""
+код выполняет сортировку по запросу пользователя по параметрам ( город, пол, рамки возраста) из талбицы БД 
+< Users_info > и возвращает отсортированные по запрошенным ползьзователям 3 самые лайкнутые фото со стены 
+"""
 engine = sqlalchemy.create_engine(DSN)
 
 create_table(engine)
