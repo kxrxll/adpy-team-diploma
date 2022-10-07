@@ -9,12 +9,12 @@ class Users_info(Base):
     id = sq.Column(sq.Integer, primary_key=True)
     first_name = sq.Column(sq.VARCHAR(length=40), nullable=False)
     second_name = sq.Column(sq.VARCHAR(length=40), nullable=False)
-    birth_date = sq.Column(sq.DATE)
+    age = sq.Column(sq.Integer)
     city = sq.Column(sq.VARCHAR(length=40))
     sex = sq.Column(sq.Integer)
 
     def __str__(self):
-        return f'Users_info {self.id}: ({self.first_name}, {self.second_name}, {self.city}, {self.birth_date}, {self.sex})'
+        return f'Users_info {self.id}: ({self.first_name}, {self.second_name}, {self.city}, {self.age}, {self.sex})'
 
 
 class White_list(Base):

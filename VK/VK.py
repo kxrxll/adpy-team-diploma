@@ -1,6 +1,7 @@
 import requests
 import time
 import configparser
+from datetime import datetime
 from sqlalchemy import create_engine
 import re
 import pandas as pd
@@ -53,7 +54,11 @@ class VK:
                         self.user_data[-1]['id'] = res1['id']
                         self.user_data[-1]['first_name'] = res1['first_name']
                         self.user_data[-1]['second_name'] = res1['last_name']
-                        self.user_data[-1]['birth_date'] = res1['bdate']
+                        today = datetime.now().strftime("%d.%m.%Y")
+                        d1 = datetime.strptime(res1['bdate'], "%d.%m.%Y")
+                        d2 = datetime.strptime(today, "%d.%m.%Y")
+                        age = (abs((d2 - d1).days) // 365)
+                        self.user_data[-1]['age'] = age
                         self.user_data[-1]['city'] = res1['city']['title']
                         self.user_data[-1]['sex'] = res1['sex']
                     else:
