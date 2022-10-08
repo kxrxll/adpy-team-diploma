@@ -10,8 +10,6 @@ class Users_info(Base):
     age = sq.Column(sq.Integer)
     city = sq.Column(sq.VARCHAR(length=40))
     sex = sq.Column(sq.Integer)
-
-
     def __str__(self):
         return f'Users_info {self.id}: ({self.first_name}, {self.second_name}, {self.city}, {self.age}, {self.sex})'
 
