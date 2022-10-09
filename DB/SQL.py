@@ -46,10 +46,12 @@ def get_photos(input_):
 
     # pprint(sorted_pairs)
     pprint(output)
+'''
+ВЫ этой части кода в полях < Users_info.sex, Users_info.city, Users_info.age > подставить поля из выбора пользователя с бота.
+'''
 
 
-
-for c in session.query(Users_info).filter(Users_info.sex == 1, Users_info.city == 'Санкт-Петербург',Users_info.age >= 27, Users_info.age <= 35).all():
+for c in session.query(Users_info).filter(Users_info.sex == 1, Users_info.city == 'Санкт-Петербург',Users_info.city >= 27, Users_info.age <= 35).all():
     users_id = c.__dict__['id']
     try:
         # print(users_id)
