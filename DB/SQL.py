@@ -1,15 +1,15 @@
 import sqlalchemy
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from sqlalchemy.orm import sessionmaker
 from config import DSN, password_4
 from Models import create_table, Users_info, Black_list, White_list
 import requests
 from collections import OrderedDict
-from pprint import pprint
-import VK
 import time
+
 """
 код выполняет сортировку по запросу пользователя по параметрам ( город, пол, рамки возраста) из талбицы БД 
-< Users_info > и возвращает отсортированные по запрошенным ползьзователям 3 самые лайкнутые фото со стены 
+< Users_info > и возвращает отсортированные по запрошенным ползьзователям 3 самые лайкнутые фото со стены. Формирует список избранных, а также 
+чёрный список и отсекает его из нового запроса
 """
 engine = sqlalchemy.create_engine(DSN)
 
@@ -44,18 +44,32 @@ def get_photos(input_):
             if len(output) == 3:
                 break
 
-    # pprint(sorted_pairs)
-    pprint(output)
 '''
-ВЫ этой части кода в полях < Users_info.sex, Users_info.city, Users_info.age > подставить поля из выбора пользователя с бота.
+в запросе: < id_user > - добавляемый ботом ID пользователя, далающего запрос.  < id_db_user > - id пользователя направляемого в белый/чёрный список
 '''
 
+bl1 = Black_list(id_user=737786081, id_db_user=56)
+wl = White_list(id_user=737786081, id_db_user=46)
+# session.add_all([bl1,wl])
+# session.commit()
 
-for c in session.query(Users_info).filter(Users_info.sex == 1, Users_info.city == 'Санкт-Петербург',Users_info.city >= 27, Users_info.age <= 35).all():
+id_black_list = []
+for c in session.query(Black_list).all():
+   id_black_list.append(c.__dict__['id_db_user'])
+
+id_white_list = []
+for c in session.query(White_list).all():
+   id_white_list.append(c.__dict__['id_db_user'])
+
+
+for c in session.query(Users_info).filter(Users_info.sex == 2, Users_info.city == 'Москва',Users_info.age >= 27, Users_info.age <= 38).all():
     users_id = c.__dict__['id']
     try:
-        # print(users_id)
-        get_photos(input_=users_id)
+        if users_id in id_black_list:
+            pass
+        else:
+            print(users_id)
+            get_photos(input_=users_id)
     except:
         pass
 
