@@ -1,16 +1,19 @@
 import sqlalchemy
+import configparser
 from sqlalchemy.orm import sessionmaker
-from config import DSN, password_4
 from Models import create_table, Users_info, Black_list, White_list
 import requests
 from collections import OrderedDict
 import time
 
+config = configparser.ConfigParser()
+config.read("settings.ini")
+engine = sqlalchemy.create_engine(config["DSN"]["DSN"])
 create_table(engine)
-
 Session = sessionmaker(bind=engine)
 session = Session()
 password = config["VK"]["token"]
+
 
 def get_photos(input_):
     time.sleep(0.33)
@@ -26,7 +29,6 @@ def get_photos(input_):
         for i in item['sizes']:
             if i['type'] == 'y':
                 name_dict[-1][i['url']] = item['likes']['count']
-
 
     sorted_pairs = sorted(((k, v) for d in name_dict for k, v in d.items()), key=lambda pair: pair[1], reverse=True)
 
@@ -62,5 +64,5 @@ for c in session.query(Users_info).filter(Users_info.sex == 2, Users_info.city =
             get_photos(input_=users_id)
     except:
         pass
-        
+
 session.close()
