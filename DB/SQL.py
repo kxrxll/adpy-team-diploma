@@ -64,3 +64,5 @@ for c in session.query(Users_info).filter(Users_info.sex == 2, Users_info.city =
             get_photos(input_=users_id)
     except:
         pass
+
+session.close()
